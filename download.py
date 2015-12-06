@@ -4,8 +4,11 @@ import time
 
 with open('app.url', 'r') as r:
 	for line in r:
-		os.system("cd /z/apks/Downloads/app/ && wget --recursive --referer=https://apkpure.com/app?sort=download %s" %line.strip('\n'))
+		os.system("wget %s" %line.strip('\n'))
+		time.sleep(5)
+
 with open('game.url', 'r') as r:
 	for line in r:
-		os.system("cd /z/apks/Downloads/game/ && wget --recursive --referer=https://apkpure.com/app?sort=download %s" %line.strip('\n'))
+		os.system("wget %s" %line.strip('\n'))
+		time.sleep(5)
 		
