@@ -1,9 +1,9 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,7 +14,7 @@ public class APKDownloader {
 	static String gameUrlHeader = "https://apkpure.com/game?sort=download&page=";
 	static BufferedWriter bw;
 
-	public static void parse(BufferedWriter bw, String urlHeader) {
+	public static void parse(BufferedWriter bw, String urlHeader) throws InterruptedException {
 		int i =1;
 		int count = 0;
 		int total = 0;
@@ -24,15 +24,21 @@ public class APKDownloader {
 			try {
 				Document doc = Jsoup.connect(url).timeout(2000).get();
 				Iterator<Element> ite = doc.select("a:contains(Download APK)").iterator();
-				while(ite.hasNext()&&total<=3) {
+				while(ite.hasNext()) {
 					Element e = ite.next();
-					String downloadURL = e.attr("href");
-					Connection.Response response = Jsoup.connect(downloadURL).referrer(urlHeader.substring(0, urlHeader.length()-6)).ignoreContentType(true).execute();
-//					System.out.println(response.url());
-//					System.out.println(response.headers());
-					bw.write(response.url()+"\n");
+					URL downloadURL = new URL(e.attr("href"));
+//					String filename = downloadURL.toString().split("fn=")[1].split("&k=")[0];
+//					System.out.println(downloadURL.toString());
+//					System.out.println(filename);
+//					ReadableByteChannel rbc = Channels.newChannel(downloadURL.openStream());
+//					FileOutputStream fos = new FileOutputStream(filename);
+//					fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+					bw.write(downloadURL+"\n");
 					count++;
 					total++;
+//					Thread.sleep(1000);
+//					rbc.close();
+//					fos.close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -42,7 +48,7 @@ public class APKDownloader {
 		System.out.println("total: "+total);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		try {
 			bw = new BufferedWriter(new FileWriter("app.url"));
 			parse(bw, appUrlHeader);
