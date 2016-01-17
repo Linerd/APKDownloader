@@ -2,5 +2,6 @@
 .classpath
 .project
 .settings/
-app.url
-game.url
+*.url
+*.jar
+/src
