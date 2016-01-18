@@ -2,3 +2,6 @@
 .classpath
 .project
 .settings/
+*.url
+/src
+*.jar
